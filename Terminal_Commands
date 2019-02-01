@@ -1,0 +1,8 @@
+Show tables:
+\dt
+
+Show databases:
+\l
+
+Describe table schema:
+\d+ tablename
