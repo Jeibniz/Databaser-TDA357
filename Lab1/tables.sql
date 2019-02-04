@@ -77,7 +77,7 @@ CREATE TABLE Registered (
 CREATE TABLE Taken (
     student NUMERIC(10) REFERENCES Students(idnr), 
     course CHAR(6) REFERENCES Courses(code),
-    grade CHAR(1) NOT NULL,
+    grade CHAR(1) NOT NULL CHECK (grade = 'U' OR grade = '3' OR grade = '4' OR grade = '5'),
     PRIMARY KEY(student, course)
 );
 
