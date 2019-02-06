@@ -56,17 +56,17 @@ WITH ids AS (
     mathCred AS (
         SELECT student, SUM(credits) AS mathCredits
         FROM PassedCourses, Classified
-        WHERE classifications = 'math' AND PassedCourses.course = Classified.course
+        WHERE classification = 'math' AND PassedCourses.course = Classified.course
         GROUP BY student),
     resCred AS (
         SELECT student, SUM(credits) AS researchCredits
         FROM PassedCourses, Classified
-        WHERE classifications = 'research' AND PassedCourses.course = Classified.course
+        WHERE classification = 'research' AND PassedCourses.course = Classified.course
         GROUP BY student),
     semCorse AS (
         SELECT student, COUNT(PassedCourses.course) AS seminarCourses
         FROM PassedCourses, Classified
-        WHERE classifications = 'seminar' AND PassedCourses.course = Classified.course
+        WHERE classification = 'seminar' AND PassedCourses.course = Classified.course
         GROUP BY student),
     qual AS (
         SELECT DISTINCT ids.student, mandatoryLeft = 0 AND mathCredits >= 20 

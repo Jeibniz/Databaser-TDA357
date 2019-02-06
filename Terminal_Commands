@@ -8,4 +8,4 @@ Describe table schema:
 \d+ tablename
 
 Kör fil
-psql -d Lab1 -a -f dropAllTables.sql
+psql -d Lab1 -a -f run.sql

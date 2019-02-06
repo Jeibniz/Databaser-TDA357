@@ -22,7 +22,7 @@ CREATE TABLE Courses (
 
 CREATE TABLE LimitedCourses(
     code CHAR(6) REFERENCES Courses(code),
-    seats INT Not NULL,
+    seats INT NOT NULL,
     PRIMARY KEY(code)
 );
 
@@ -33,16 +33,16 @@ CREATE TABLE Classifications(
 
 CREATE TABLE StudentBranches(
     student NUMERIC(10,0) REFERENCES Students(idnr),
-    branch TEXT,
-    program TEXT,
+    branch TEXT NOT NULL,
+    program TEXT NOT NULL,
     FOREIGN KEY (branch, program) REFERENCES Branches(name, program),
     PRIMARY KEY(student)
 );
 
 CREATE TABLE Classified(
     course CHAR(6) REFERENCES Courses(code),
-    classifications TEXT REFERENCES Classifications(name),
-    PRIMARY KEY(course, classifications)
+    classification TEXT REFERENCES Classifications(name),
+    PRIMARY KEY(course, classification)
 );
 
 CREATE TABLE MandatoryProgram(
@@ -82,7 +82,7 @@ CREATE TABLE Taken (
 
 CREATE TABLE WaitingList (
     student NUMERIC(10) REFERENCES Students(idnr), 
-    course CHAR(6) REFERENCES Courses(code),
+    course CHAR(6) REFERENCES LimitedCourses(code),
     position SERIAL,
     PRIMARY KEY(student, course)
 );
