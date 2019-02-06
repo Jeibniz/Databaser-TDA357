@@ -4,3 +4,5 @@ DROP TABLE IF EXISTS Students, Branches, Courses,
     Classified, MandatoryProgram, MandatoryBranch, 
     RecommendedBranch, Registered, Taken, WaitingList
     CASCADE;
+DROP VIEW IF EXISTS BasicInformation, FinishedCourses,
+Registrations, UnreadMandatory, PathToGraduation;

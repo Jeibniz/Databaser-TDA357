@@ -1,15 +1,14 @@
--- TODO: CHANGE TO VARCHAR
 CREATE TABLE Students (
     idnr    NUMERIC(10) CHECK (idnr > 0),
     name    TEXT NOT NULL,
     login   TEXT NOT NULL UNIQUE,
-    program TEXT NOT NULL, --TODO: Change to reference
+    program TEXT NOT NULL,
     PRIMARY KEY(idnr)
 );
 
 CREATE TABLE Branches (
     name    TEXT,
-    program TEXT, --TODO: Change to reference
+    program TEXT,
     PRIMARY KEY (name, program)
 );
 
@@ -17,7 +16,7 @@ CREATE TABLE Courses (
     code        CHAR(6),
     name        TEXT NOT NULL,
     credits     FLOAT NOT NULL,
-    department  TEXT NOT NULL, --TODO: Change to reference
+    department  TEXT NOT NULL,
     PRIMARY KEY(code)
 );
 
@@ -34,9 +33,9 @@ CREATE TABLE Classifications(
 
 CREATE TABLE StudentBranches(
     student NUMERIC(10,0) REFERENCES Students(idnr),
-    branche TEXT,
+    branch TEXT,
     program TEXT,
-    FOREIGN KEY (branche, program) REFERENCES Branches(name, program),
+    FOREIGN KEY (branch, program) REFERENCES Branches(name, program),
     PRIMARY KEY(student)
 );
 
@@ -56,7 +55,7 @@ CREATE TABLE MandatoryBranch (
     course CHAR(6) REFERENCES Courses(code),
     branch TEXT,
     program TEXT,
-    PRIMARY KEY(course),
+    PRIMARY KEY(course, branch, program),
     FOREIGN KEY(branch, program) REFERENCES Branches (name, program)
 );
 
@@ -64,7 +63,7 @@ CREATE TABLE RecommendedBranch (
     course CHAR(6) REFERENCES Courses(code),
     branch TEXT,
     program TEXT,
-    PRIMARY KEY(course),
+    PRIMARY KEY(course, branch, program),
     FOREIGN KEY(branch, program) REFERENCES Branches (name, program)
 );
 
@@ -77,7 +76,7 @@ CREATE TABLE Registered (
 CREATE TABLE Taken (
     student NUMERIC(10) REFERENCES Students(idnr), 
     course CHAR(6) REFERENCES Courses(code),
-    grade CHAR(1) NOT NULL CHECK (grade = 'U' OR grade = '3' OR grade = '4' OR grade = '5'),
+    grade CHAR(1) NOT NULL CHECK (grade IN ('U', '3', '4', '5')),
     PRIMARY KEY(student, course)
 );
 
@@ -87,6 +86,3 @@ CREATE TABLE WaitingList (
     position SERIAL,
     PRIMARY KEY(student, course)
 );
-
-
-
