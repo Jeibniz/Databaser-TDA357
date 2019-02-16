@@ -1,6 +1,6 @@
 Domain( 
 dabbreviation dname pname pabbreviation bname idnr sname login seats clname ccode credits 
-cname grade prerequisite position
+cname grade prerequisite position 
 
 dname -> dabbreviation
 dabbreviation -> dname 
@@ -18,7 +18,5 @@ ccode -> credits
 
 prerequisite -> clname
 
-idnr course -> position
-
-
+idnr ccode -> position
 )
