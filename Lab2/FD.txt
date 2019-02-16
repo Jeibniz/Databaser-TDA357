@@ -1,0 +1,29 @@
+Domain( 
+dabbreviation dname pname pabbreviation bname idnr sname login seats clname ccode credits cname grade	
+
+dname -> dabbreviation
+
+dabbreviation -> dname 
+
+pabbreviation -> pname
+
+bname -> pname
+
+idnr -> pname
+
+idnr -> bname
+
+ccode -> dname
+
+idnr -> sname
+
+idnr -> login
+
+(<->)
+
+ccode -> cname
+
+cname -> ccode 
+
+
+)
