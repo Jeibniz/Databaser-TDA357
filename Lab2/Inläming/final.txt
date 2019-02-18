@@ -1,0 +1,55 @@
+Department(_name,abbreviation) -- abb unique
+
+Program(_name, _department, abbreviation)
+department->Department.name
+
+MandatoryProgram(_program,_course)
+program->Programes.name
+course->Courses.name
+
+Courses(_code,name,department, name, credits) -- course name unique
+department->Department.name
+
+Branches(_name,_program)
+program->Programs.name
+
+MandatoryBranch(_branch,_course, program)
+branch->Branches.name
+course->Courses.name
+program->program.name
+
+
+RecomendedBranch(_branch,_course, program)
+branch->Branches.name
+course->Courses.name
+program->program.name
+
+
+Student(_idnr,_program,name,login, branch) -- log in unique
+program->Programs.name
+
+StudentBraches(_student,_branch, program)
+student->Students.idnr
+branch->Branches.name
+program->program.name
+
+Registerd(_course,_student)
+course->Courses.code
+student->Students.idnr
+
+Taken(_course,_student)
+course->Courses.code
+student->Students.idnr
+
+WaitingList(_course,_student, position)
+course->Courses.code
+student->Students.idnr
+
+LimitedCourses(_course,seats)
+course->Courses.code
+
+Classifications(_name)
+
+Classified(_classifiaction,_course)
+classification->Classifications.name
+course->Courses.code

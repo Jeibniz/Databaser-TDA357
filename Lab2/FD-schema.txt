@@ -1,0 +1,17 @@
+Departments(_name, _abbreviation) 
+
+Programs(_name, abbreviation)
+
+Courses(_code, _name, credits, classification, seats, department)
+    department -> Departments.abbreviation
+
+Students(_idnr, name, _login, program, branch)
+    program -> Programs.name
+
+WaitingLists(_student, _course, position)
+    student -> Students.idnr
+    course -> Courses.code
+
+LimitedCourses(_student, _course, grade, position)
+student -> Students.idnr
+course -> Courses.code
