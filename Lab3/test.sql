@@ -1,13 +1,3 @@
 \i setup.sql
 
-SELECT * FROM BasicInformation;
-
-SELECT * FROM FinishedCourses;
-
-SELECT * FROM PassedCourses;
-
-SELECT * FROM Registrations;
-
-SELECT * FROM UnreadMandatory;
-
-SELECT * FROM PathToGraduation;
+INSERT INTO Registered VALUES (2222222222,'CCC111');

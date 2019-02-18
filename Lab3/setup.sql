@@ -3,3 +3,4 @@ DROP OWNED BY jonathan CASCADE;
 \i tables.sql
 \i views.sql
 \i inserts.sql
+\i triggers.sql
