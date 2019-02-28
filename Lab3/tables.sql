@@ -26,16 +26,17 @@ CREATE TABLE Branches(
 );
 
 CREATE TABLE Courses (
-    code        CHAR(6),
-    name        TEXT NOT NULL UNIQUE,
-    credits     FLOAT NOT NULL,
-    department  TEXT REFERENCES Departments(name),
+    code            CHAR(6),
+    name            TEXT NOT NULL UNIQUE,
+    credits         FLOAT NOT NULL,
+    department      TEXT REFERENCES Departments(name),
+    prerequisite    CHAR(6) ARRAY,
     PRIMARY KEY(code)
 );
 
 CREATE TABLE LimitedCourses(
-    code CHAR(6) REFERENCES Courses(code),
-    seats INT NOT NULL,
+    code    CHAR(6) REFERENCES Courses(code),
+    seats   INT NOT NULL,
     PRIMARY KEY(code)
 );
 

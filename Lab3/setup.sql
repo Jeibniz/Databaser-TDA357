@@ -1,6 +1,6 @@
-DROP OWNED BY jonathan CASCADE;
+--DROP OWNED BY jonathan CASCADE;
 \i drop.sql
 \i tables.sql
 \i views.sql
-\i inserts.sql
+--\i inserts.sql
 \i triggers.sql

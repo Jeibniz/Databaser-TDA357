@@ -89,5 +89,5 @@ FROM ids
     LEFT OUTER JOIN qual ON ids.student = qual.student;
 
 CREATE OR REPLACE VIEW CourseQueuePositions AS
-SELECT student, course, position
-FROM WaitingList
+SELECT student, course, ROW_NUMBER () OVER (ORDER BY position) AS position
+FROM WaitingList;
