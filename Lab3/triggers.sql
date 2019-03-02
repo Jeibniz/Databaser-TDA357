@@ -1,6 +1,7 @@
 
 CREATE FUNCTION add_to_waitnglist_when_full() RETURNS trigger AS $register_to_course$
     DECLARE
+        -- The loop varible.
         c TEXT;
     BEGIN
         -- Check if students is alredy registerd.
@@ -60,7 +61,6 @@ CREATE FUNCTION add_from_waitinglist_when_unregister() RETURNS trigger AS $remov
         THEN   
             DELETE FROM WaitingList WHERE student = OLD.student AND course = OLD.course;
             RETURN NULL;
-            --RAISE EXCEPTION 'IFFFFFThe student is in the waithinglist .';
         END IF;
         -- Check if student was registerd.
         IF  OLD.student IN ( 
@@ -68,6 +68,7 @@ CREATE FUNCTION add_from_waitinglist_when_unregister() RETURNS trigger AS $remov
             WHERE Registered.course = OLD.COURSE)
         THEN 
             DELETE FROM Registered WHERE student = OLD.student AND course = OLD.course;
+            -- If the course is limited check if it is full and that the waiting list is not empty.
             IF OLD.COURSE IN (SELECT LimitedCourses.code FROM LimitedCourses)
                 AND (
                     (SELECT COUNT(DISTINCT Registered.student) FROM Registered
@@ -80,6 +81,7 @@ CREATE FUNCTION add_from_waitinglist_when_unregister() RETURNS trigger AS $remov
                     NOTNULL
                 )
             THEN
+            --Add first studnet from waitinglist to registerd and delete it from the waiting list.
             first_student = 
                 (SELECT student from CourseQueuePositions
                 WHERE course = OLD.course AND position = 1);
@@ -100,88 +102,3 @@ CREATE TRIGGER register_to_course INSTEAD OF INSERT OR UPDATE ON Registrations
 
 CREATE TRIGGER unregister_from_course INSTEAD OF DELETE ON Registrations 
     FOR EACH ROW EXECUTE FUNCTION add_from_waitinglist_when_unregister();
-
-/*
-EXPECTED OUTPUT: 
-
-  student   | course |   status   
-------------+--------+------------
- 1111111111 | CCC111 | registered
-(1 row)
-
-INSERT 0 1
-INSERT 0 1
-INSERT 0 1
-  student   | course |   status   
-------------+--------+------------
- 1111111111 | CCC222 | registered
- 3333333333 | CCC222 | waiting
- 1111111111 | CCC111 | registered
- 2222222222 | CCC222 | waiting
-(4 rows)
-
-psql:test.sql:27: ERROR:  The student is already registerd to this course.
-CONTEXT:  PL/pgSQL function add_to_waitnglist_when_full() line 10 at RAISE
-psql:test.sql:28: ERROR:  The student is already registerd to this course.
-CONTEXT:  PL/pgSQL function add_to_waitnglist_when_full() line 10 at RAISE
-  student   | course |   status   
-------------+--------+------------
- 1111111111 | CCC222 | registered
- 3333333333 | CCC222 | waiting
- 1111111111 | CCC111 | registered
- 2222222222 | CCC222 | waiting
-(4 rows)
-
-psql:test.sql:32: ERROR:  The student has not taken the prerequisite courses.
-CONTEXT:  PL/pgSQL function add_to_waitnglist_when_full() line 23 at RAISE
-INSERT 0 1
-INSERT 0 1
-  student   | course |   status   
-------------+--------+------------
- 3333333333 | CCC333 | registered
- 1111111111 | CCC222 | registered
- 3333333333 | CCC222 | waiting
- 1111111111 | CCC111 | registered
- 2222222222 | CCC222 | waiting
-(5 rows)
-
-DELETE 0
-  student   | course |   status   
-------------+--------+------------
- 3333333333 | CCC333 | registered
- 1111111111 | CCC222 | registered
- 3333333333 | CCC222 | waiting
- 2222222222 | CCC222 | waiting
-(4 rows)
-
-DELETE 0
-  student   | course |   status   
-------------+--------+------------
- 1111111111 | CCC222 | registered
- 3333333333 | CCC222 | waiting
- 2222222222 | CCC222 | waiting
-(3 rows)
-
-DELETE 0
-  student   | course |   status   
-------------+--------+------------
- 3333333333 | CCC222 | waiting
- 2222222222 | CCC222 | registered
-(2 rows)
-
-DELETE 0
-  student   | course |   status   
-------------+--------+------------
- 2222222222 | CCC222 | registered
-(1 row)
-
-INSERT 0 1
-INSERT 0 1
-DELETE 0
-  student   | course |   status   
-------------+--------+------------
- 3333333333 | CCC222 | waiting
- 2222222222 | CCC222 | registered
-(2 rows)
-
-*/

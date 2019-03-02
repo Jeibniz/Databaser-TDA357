@@ -1,20 +1,5 @@
 \i setup.sql
 
---Setup inserts
-INSERT INTO Departments VALUES ('Dep1', 'D1');
-INSERT INTO Programs VALUES ('Prog1', 'P1', '{"Dep1"}');
-
-INSERT INTO Students VALUES (1111111111,'S1','ls1','Prog1');
-INSERT INTO Students VALUES (2222222222,'S2','ls2','Prog1');
-INSERT INTO Students VALUES (3333333333,'S3','ls3','Prog1');
-
-INSERT INTO Courses VALUES ('CCC111','C1',10,'Dep1');
-INSERT INTO Courses VALUES ('CCC222','C2',20,'Dep1');
-INSERT INTO Courses VALUES ('CCC333','C3',30,'Dep1', '{CCC111}');
-
-INSERT INTO LimitedCourses VALUES ('CCC222',1);
-INSERT INTO LimitedCourses VALUES ('CCC333',2);
-
 -- registered to unlimited course
 INSERT INTO Registrations VALUES (1111111111,'CCC111');
 SELECT * FROM Registrations;
@@ -53,3 +38,87 @@ INSERT INTO Registered VALUES (1111111111,'CCC222');
 INSERT INTO Registrations VALUES (3333333333,'CCC222');
 DELETE FROM Registrations WHERE student = 1111111111 AND course = 'CCC222';
 SELECT * FROM Registrations;
+
+/*
+EXPECTED OUTPUT: 
+
+  student   | course |   status   
+------------+--------+------------
+ 1111111111 | CCC111 | registered
+(1 row)
+
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+  student   | course |   status   
+------------+--------+------------
+ 1111111111 | CCC222 | registered
+ 3333333333 | CCC222 | waiting
+ 1111111111 | CCC111 | registered
+ 2222222222 | CCC222 | waiting
+(4 rows)
+
+psql:test.sql:27: ERROR:  The student is already registerd to this course.
+CONTEXT:  PL/pgSQL function add_to_waitnglist_when_full() line 10 at RAISE
+psql:test.sql:28: ERROR:  The student is already registerd to this course.
+CONTEXT:  PL/pgSQL function add_to_waitnglist_when_full() line 10 at RAISE
+  student   | course |   status   
+------------+--------+------------
+ 1111111111 | CCC222 | registered
+ 3333333333 | CCC222 | waiting
+ 1111111111 | CCC111 | registered
+ 2222222222 | CCC222 | waiting
+(4 rows)
+
+psql:test.sql:32: ERROR:  The student has not taken the prerequisite courses.
+CONTEXT:  PL/pgSQL function add_to_waitnglist_when_full() line 23 at RAISE
+INSERT 0 1
+INSERT 0 1
+  student   | course |   status   
+------------+--------+------------
+ 3333333333 | CCC333 | registered
+ 1111111111 | CCC222 | registered
+ 3333333333 | CCC222 | waiting
+ 1111111111 | CCC111 | registered
+ 2222222222 | CCC222 | waiting
+(5 rows)
+
+DELETE 0
+  student   | course |   status   
+------------+--------+------------
+ 3333333333 | CCC333 | registered
+ 1111111111 | CCC222 | registered
+ 3333333333 | CCC222 | waiting
+ 2222222222 | CCC222 | waiting
+(4 rows)
+
+DELETE 0
+  student   | course |   status   
+------------+--------+------------
+ 1111111111 | CCC222 | registered
+ 3333333333 | CCC222 | waiting
+ 2222222222 | CCC222 | waiting
+(3 rows)
+
+DELETE 0
+  student   | course |   status   
+------------+--------+------------
+ 3333333333 | CCC222 | waiting
+ 2222222222 | CCC222 | registered
+(2 rows)
+
+DELETE 0
+  student   | course |   status   
+------------+--------+------------
+ 2222222222 | CCC222 | registered
+(1 row)
+
+INSERT 0 1
+INSERT 0 1
+DELETE 0
+  student   | course |   status   
+------------+--------+------------
+ 3333333333 | CCC222 | waiting
+ 2222222222 | CCC222 | registered
+(2 rows)
+*/
