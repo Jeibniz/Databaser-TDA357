@@ -68,14 +68,21 @@ WITH ids AS (
         FROM PassedCourses, Classified
         WHERE classification = 'seminar' AND PassedCourses.course = Classified.course
         GROUP BY student),
+    recCredits AS (
+        SELECT student, SUM(PassedCourses.credits) AS recommendedCourses
+        FROM PassedCourses, RecommendedBranch
+        WHERE PassedCourses.course = RecommendedBranch.course
+        GROUP BY student),
     qual AS (
         SELECT DISTINCT ids.student, mandatoryLeft = 0 AND mathCredits >= 20 
             AND researchCredits >= 10 AND seminarCourses >= 1 AND 
+            recommendedCourses >= 10 AND
             --Makes sure that the student is in a branch
             ids.student IN (SELECT student from StudentBranches) AS qualified 
-        FROM ids, mandaLeft, mathCred, resCred, semCorse
+        FROM ids, mandaLeft, mathCred, resCred, semCorse, recCredits
         WHERE ids.student = mandaLeft.student AND ids.student = mathCred.student AND
-        ids.student = resCred.student AND ids.student = semCorse.student
+        ids.student = resCred.student AND ids.student = semCorse.student AND 
+        ids.student = recCredits.student
     )
 SELECT ids.student, COALESCE(totalCredits,0) AS totalCredits, mandatoryLeft AS mandatoryLeft,
     COALESCE(mathCredits,0) AS mathCredits, COALESCE(researchCredits,0) AS researchCredits, 
